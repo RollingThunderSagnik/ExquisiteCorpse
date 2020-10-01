@@ -7,11 +7,9 @@ body {
     margin: 0px;
     padding: 0px;
     overflow-x: hidden;
-
-    background:#33813C;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to top, #3381BF, #D45E81);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to top, #3381BF,  #D45E81); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+    background: #c31432;  /* fallback for old browsers */
+    background: -webkit-radial-gradient(circle, #240b36, #c31432);  /* Chrome 10-25, Safari 5.1-6 */
+    background: radial-gradient(circle, #240b36, #c31432); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     overflow-y: hidden;
 }
 
@@ -21,9 +19,9 @@ body {
     width: 100vw !important;
 }
 #ashol {
-    background: #c31431;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to top, #240b36, #c31432);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to top, #240b36, #c31432); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: #c31432;  /* fallback for old browsers */
+    background: -webkit-radial-gradient(circle, #240b36, #c31432);  /* Chrome 10-25, Safari 5.1-6 */
+    background: radial-gradient(circle, #240b36, #c31432); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     width: 100vw;
     height: 100vh;
     position: relative;
@@ -209,8 +207,8 @@ button:hover {
     width: 100vw;
     height: 100vh;
     background: #00d2ff;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #3a7bd5, #00d2ff);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #3a7bd5, #00d2ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -webkit-radial-gradient(circle, #3a7bd5, #00d2ff);  /* Chrome 10-25, Safari 5.1-6 */
+    background: radial-gradient(circle, #3a7bd5, #00d2ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     top: 0px;
 }
 #mroom .buttons{
@@ -244,8 +242,8 @@ button:hover {
     top: 0px;
     z-index: -9;
     background: #e96443;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #904e95, #e96443);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #904e95, #e96443); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -webkit-radial-gradient(circle, #904e95, #e96443);  /* Chrome 10-25, Safari 5.1-6 */
+    background: radial-gradient(circle, #904e95, #e96443); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     padding-bottom: 50px;
 }
 
