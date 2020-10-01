@@ -51,7 +51,7 @@ body {
 }
 
 .cuemark {
-    width: 600px;
+    width: 601px;
     border-color: transparent;
     border-top: 1px dashed #000;
     margin: 0px;
@@ -63,7 +63,7 @@ body {
 }
 
 .left-block {
-    width: 300px;
+    width: 301px;
     max-width: calc((100vw - 600px) / 2 - 25px);
     position: fixed;
     top: 50%;
