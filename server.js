@@ -1,114 +1,120 @@
-const express = require("express");
-var app = express();
-var http = require('http').createServer(app);
-const PORT = process.env.PORT || 5000;
-var io = require('socket.io')(http);
+const express = require('express');
+const path = require('path');
+const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const socketIo = require("socket.io");
+const port = process.env.PORT || 5000;
 
-var rooms = [];
-/*
- room = {
-     'room ID' : 12345,
-     'strength : 2,
-     'players' : [],
-     'images' : []
- }
-*/
+let activePlayer = '';
+let currentCnvs = {};
+let currentCounter = 0;
+// let lastSender
 
-app.use(express.static(__dirname));
-
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
+const io = socketIo(server,  {
+    // cors: {
+    //     origin: "*",
+    // },
+    maxHttpBufferSize: 1e8 
 });
 
 
-io.on('connection', function(socket){
-    // console.log("hello");
-    socket.on('disconnect',function(){
-        var sID = socket.id;
-        for(var i=0;i<rooms.length;i++)
-        {
-            var indexu = rooms[i]['players'].indexOf(sID);
-            if(indexu>=0)
-            { 
-                rooms[i]['strength'] = rooms[i]['strength'] - 1;
-                io.emit('strength', rooms[i]['room ID'], rooms[i]['strength']);
-                //console.log(rooms[i]['room ID']);
-                rooms[i]['players'].splice(indexu,1);
-                if(rooms[i]['strength'] == 0)
-                {
-                    rooms.splice(i,1);
-                }
-            }
-        }
-    });
+app.use(express.static(path.join(__dirname, 'build')));
 
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
-    socket.on('cue', function(imgData,rID,id,bessa){
-        io.emit('cue',imgData,rID,id);
-       //rooms[rID]['images'].push(bessa);
-        for(var i=0;i<rooms.length;i++)
-        {
-            if(rooms[i]['room ID'] == rID)
-             {   
-                 rooms[i]['images'].push(bessa);
-                 break;
-             }
-        }
-        //console.log(rooms);
-    });
+io.on('connection', (socket) => {
 
-    socket.on('sesh', function(roomID){
-        for(var i=0;i<rooms.length;i++)
+    // console.log("user joined");
+    socket.on('join', function (name) {
+        // console.log(name);
+        let roomName = "user_"+name;
+        // console.log(socket.id, roomName, io.sockets.adapter.rooms.get(roomName));
+        if(io.sockets.adapter.rooms.get(roomName))
         {
-            if(rooms[i]['room ID'] == roomID)
-             {   
-                 io.emit('sesh',roomID,rooms[i]['images']);
-                 //console.log(rooms[i]['images'][0]);
-             }
-        }
-    });
-
-    socket.on('joinroom', function(roomID, socketID){
-        
-        var f=true;
-        var indu=-1;
-        for(var i=0;i<rooms.length;i++)
-        {
-            //console.log(rooms[i]['room ID'] +"and" + roomID);
-            if(rooms[i]['room ID'] == roomID)
-            { 
-                f=false; 
-                indu=i;
-            }
-        }
-        if(f)
-        { 
-            //console.log("\nf is true\n");
-            var newroom = {
-                'room ID' : roomID,
-                'strength' : 1,
-                'players' : [socketID],
-                'images' : []
-            }
-            rooms.push(newroom);
-            io.emit('roomsuccess',roomID,socketID,true);
-            io.emit('strength', roomID, 1);
+            //invalid
+            socket.emit("join_status", false);
         }
         else
         {
-            //console.log("f is false");
-            if(rooms[indu]['strength']==2)
-                io.emit('roomfull',socketID);
-            else
+            socket.join(roomName);
+            // console.log(io.sockets.adapter.rooms);
+            socket.emit("join_status", true);
+            if(!activePlayer)
             {
-                rooms[indu]['strength']=2;
-                rooms[indu]['players'].push(socketID);
-                io.emit('roomsuccess',roomID,socketID,false);
-                io.emit('strength', roomID, 2);
+                activePlayer = name;
+            }
+            socket.emit("receiveActive", activePlayer);
+        }
+    });
+
+    const playerUpdate = () => {
+        let rooms = Array.from(io.sockets.adapter.rooms.keys() );
+        let names  = rooms
+            .filter( (room) => room.includes("user_"))
+            .map( (name) => name.substring(5));
+        io.emit("playersInfo", names);
+    };
+
+    const assignActivePlayer = () => {
+        let rooms = Array.from(io.sockets.adapter.rooms.keys() );
+        let names  = rooms
+            .filter( (room) => room.includes("user_"))
+            .map( (name) => name.substring(5));
+        console.log(names, activePlayer);
+        if(names)
+        {
+            console.log(names.indexOf(activePlayer));
+            if(names.indexOf(activePlayer) == -1)
+            {
+                let newName = names[Math.floor(Math.random()*names.length)];
+                activePlayer = newName;
             }
         }
-        //console.log(rooms);
+        else
+        {
+            activePlayer = '';
+        }
+        io.emit("receiveActive", activePlayer);
+    }
+
+    socket.on("getPlayersInfo", playerUpdate);
+
+    socket.on("disconnect", (reason) => {
+        console.log(io.sockets.adapter.rooms);
+        // console.log(socket.rooms);
+        assignActivePlayer();
+        playerUpdate();
+    });
+
+    socket.on("sendSketch", (data) => {
+        // console.log(data);
+        // currentCnvs.push(data.cnvs);
+        if(data.from == activePlayer)
+        {
+            currentCnvs[currentCounter++] = data.cnvs;
+            console.log(currentCounter, data.from, data.to);
+            io.sockets.in("user_"+data.to).emit("receiveSketch",{
+                from: data.from,
+                clue: data.clueCnvs
+            });
+            activePlayer = data.to;
+            io.emit("receiveActive", activePlayer);
+        }
+    });
+
+    socket.on("endGame", (data) => {
+        currentCnvs[currentCounter++] = data.cnvs;
+        io.emit("endGame", currentCnvs);
+        currentCnvs = {};
+        currentCounter = 0;
+        activePlayer = '';
+        io.emit("receiveActive", activePlayer);
     });
 });
 
-http.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+server.listen(port, () => {
+  console.log(`listening on *:${port}`);
+});

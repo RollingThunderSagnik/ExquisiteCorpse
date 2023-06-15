@@ -1,0 +1,112 @@
+* {
+  color: #f8f8f2;
+  font-family: 'Be Vietnam', sans-serif;
+}
+
+:root {
+  
+  --blur1: rgba(40, 42, 54,0.8); 
+
+  --bg0: #1e1f29;
+  --bg1: #282a36; 
+  --bg2: #44475a; 
+  --bg3: #6272a4; 
+  --bg4: #282a36; 
+
+  --green: #50fa7b;
+  --cyan: #8be9fd;
+  --orange: #ffb86c;
+  --pink: #ff79c6;
+  --purple: #bd93f9;
+  --red: #ff5555;
+  --yellow: #f1fa8c;
+  --fg: #ffffff;
+
+  /* --dh: 100%; */
+
+}
+
+html, body, .App, #root
+{
+  height: 100%;
+}
+
+textarea:focus, input:focus, button:focus{
+  outline: none;
+}
+
+input{
+  background: var(--bg2);
+  border: 0;
+  border-radius: 0.5em;
+  font-size: 1em;
+  line-height: 1em;
+  padding-left: 1em;
+}
+
+button{
+  background: var(--bg2);
+  border: 0;
+  border-radius: 0.5em;
+  font-size: 1em;
+  line-height: 1em;
+  margin: 0em 0.8em;
+  padding: 0 1em;
+  cursor: pointer;
+}
+
+button:hover,
+.file-input:hover label{
+  background: var(--bg3) !important;
+}
+
+button:active,
+.file-input:active label{
+  background: var(--bg2) !important;
+}
+
+.player:hover {
+  background: var(--bg2);
+}
+
+.brushOptions button {
+  margin: 0.3em 0.1em;
+  height: 2.5em;
+  /* display: inline-block; */
+}
+
+.slider {
+  -webkit-appearance: none;
+  margin: 0.3em 0em;
+  width: 90%;
+  height: 1.5em;
+  padding: 0;
+  border-radius: 0.75em;
+  background: var(--bg2);
+  outline: none;
+  /* opacity: 0.7; */
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  border-radius: 0.75em;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.5em;
+  height: 1.5em;
+  background: var(--bg3);
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  border-radius: 0.75em;
+  width: 25px;
+  height: 25px;
+  background: var(--bg3);
+  cursor: pointer;
+}
